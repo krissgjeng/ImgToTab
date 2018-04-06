@@ -1,0 +1,10 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/mainfest.json"
+            ],
+            "url": "http://json.schemastore.org/chrome-manifest"
+        }
+    ]
+}
