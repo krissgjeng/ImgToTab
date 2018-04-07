@@ -27,6 +27,8 @@ class Options {
         });
     }
 }
-var opts = new Options();
-document.addEventListener('DOMContentLoaded', opts.restore_options);
-document.getElementById('save').addEventListener('click', opts.save_options);
+document.addEventListener('DOMContentLoaded', () => {
+    var opts = new Options();
+    opts.restore_options();
+    document.getElementById('save').addEventListener('click', () => opts.save_options());
+});

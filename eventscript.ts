@@ -1,5 +1,5 @@
 class Eventscript {
-    private filter = [".jpg", ".png", ".gif", ".webm"];
+    private filter = [".jpg", ".png", ".gif", ".webm",".swf"];
 
     constructor() { }
 

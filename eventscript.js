@@ -1,6 +1,6 @@
 class Eventscript {
     constructor() {
-        this.filter = [".jpg", ".png", ".gif", ".webm"];
+        this.filter = [".jpg", ".png", ".gif", ".webm", ".swf"];
     }
     endswithFilter(link) {
         for (var i = 0; i < this.filter.length; i++) {

@@ -26,6 +26,12 @@ class NewTab {
                 NewTab.media.push(vid);
                 htmlCode += vid.html + "<br>";
             }
+            else if (images[i].toLowerCase().endsWith(".swf"))
+            {
+                var flash =new MyFlash(images[i]);
+                NewTab.media.push(flash);
+                htmlCode += flash.html + "<br>";
+            }
             else
             {
                 var img =new MyImage(images[i]);
@@ -33,7 +39,7 @@ class NewTab {
                 htmlCode += img.html + "<br>";
             }
         }
-        alert(NewTab.media.length);
+        //alert(NewTab.media.length);
         document.getElementById("images").innerHTML = htmlCode;
     }
 
@@ -44,8 +50,8 @@ class NewTab {
             });
     }
     
-    public downloadM(media:MyMedia) {
-        chrome.downloads.download({url: media.url, filename: "imgintab/"+media.fileName},(dlid)=>{
+    public downloadM(media:MyMedia,index:number=null) {
+        chrome.downloads.download({url: media.url, filename: "imgintab/"+( index!=null ? index.toString()+"_"+media.fileName :media.fileName )},(dlid)=>{
             NewTab.downloads.push(dlid);
         });
     }
@@ -64,14 +70,12 @@ class NewTab {
                 //alert("changed"+download.state.current);
                 if(download.state.current=="complete"&&dlnr < NewTab.media.length)
                 {
-                    this.downloadM(NewTab.media[dlnr])
+                    this.downloadM(NewTab.media[dlnr],dlnr);
                     dlnr++;
                 }
             }
         });
-        this.downloadM(NewTab.media[0]);
-        
-        
+        this.downloadM(NewTab.media[0],0);
     }
 }
 document.addEventListener('DOMContentLoaded', ()=> { 

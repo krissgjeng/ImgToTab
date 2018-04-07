@@ -20,13 +20,18 @@ class NewTab {
                 NewTab.media.push(vid);
                 htmlCode += vid.html + "<br>";
             }
+            else if (images[i].toLowerCase().endsWith(".swf")) {
+                var flash = new MyFlash(images[i]);
+                NewTab.media.push(flash);
+                htmlCode += flash.html + "<br>";
+            }
             else {
                 var img = new MyImage(images[i]);
                 NewTab.media.push(img);
                 htmlCode += img.html + "<br>";
             }
         }
-        alert(NewTab.media.length);
+        //alert(NewTab.media.length);
         document.getElementById("images").innerHTML = htmlCode;
     }
     loadImages() {
@@ -34,8 +39,8 @@ class NewTab {
             this.genlinks(items.images);
         });
     }
-    downloadM(media) {
-        chrome.downloads.download({ url: media.url, filename: "imgintab/" + media.fileName }, (dlid) => {
+    downloadM(media, index = null) {
+        chrome.downloads.download({ url: media.url, filename: "imgintab/" + (index != null ? index.toString() + "_" + media.fileName : media.fileName) }, (dlid) => {
             NewTab.downloads.push(dlid);
         });
     }
@@ -49,12 +54,12 @@ class NewTab {
             if (NewTab.downloads.indexOf(download.id) > -1) {
                 //alert("changed"+download.state.current);
                 if (download.state.current == "complete" && dlnr < NewTab.media.length) {
-                    this.downloadM(NewTab.media[dlnr]);
+                    this.downloadM(NewTab.media[dlnr], dlnr);
                     dlnr++;
                 }
             }
         });
-        this.downloadM(NewTab.media[0]);
+        this.downloadM(NewTab.media[0], 0);
     }
 }
 //public images;

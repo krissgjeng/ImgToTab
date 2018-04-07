@@ -1,7 +1,6 @@
 class NewTabLazy {
     constructor() {
-        this.media = new Array();
-        setTimeout(function () {
+        setTimeout(() => {
             registerListener('scroll', this.lazyLoad);
             alert("time");
         }, 500);
@@ -14,19 +13,24 @@ class NewTabLazy {
         for (var i = 0; i < (images.length); i++) { //for (var i = 0; i < (images.length > 7 ? 7 : images.length); i++) {
             if (images[i].toLowerCase().endsWith(".webm")) {
                 var vid = new MyVideo(images[i], true);
-                this.media.push(vid);
+                NewTabLazy.media.push(vid);
                 htmlCode += vid.html + "<br>";
+            }
+            else if (images[i].toLowerCase().endsWith(".swf")) {
+                var flash = new MyFlash(images[i]);
+                NewTab.media.push(flash);
+                htmlCode += flash.html + "<br>";
             }
             else {
                 var img = new MyImage(images[i], true);
-                this.media.push(img);
+                NewTabLazy.media.push(img);
                 htmlCode += img.html + "<br>";
             }
         }
         document.getElementById("listing").innerHTML = htmlCode;
     }
     loadImages() {
-        chrome.storage.local.get({ images: [] }, function (items) {
+        chrome.storage.local.get({ images: [] }, (items) => {
             this.genlinks(items.images);
             this.setLazy();
             //lazyLoad();
@@ -57,9 +61,36 @@ class NewTabLazy {
             rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
             rect.left <= (window.innerWidth || document.documentElement.clientWidth));
     }
+    downloadM(media, index = null) {
+        chrome.downloads.download({ url: media.url, filename: "imgintab/" + (index != null ? index.toString() + "_" + media.fileName : media.fileName) }, (dlid) => {
+            NewTabLazy.downloads.push(dlid);
+        });
+    }
+    downloadMedia() {
+        alert("clicked downloadall for: " + NewTabLazy.media);
+        //for (let i = 0; i < NewTab.media.length; i++) {
+        //    const element = NewTab.media[i]; 
+        //}
+        var dlnr = 1;
+        chrome.downloads.onChanged.addListener(download => {
+            if (NewTabLazy.downloads.indexOf(download.id) > -1) {
+                //alert("changed"+download.state.current);
+                if (download.state.current == "complete" && dlnr < NewTabLazy.media.length) {
+                    this.downloadM(NewTabLazy.media[dlnr], dlnr);
+                    dlnr++;
+                }
+            }
+        });
+        this.downloadM(NewTabLazy.media[0], 0);
+    }
 }
+NewTabLazy.media = new Array();
+NewTabLazy.downloads = new Array();
 function registerListener(event, func) {
     window.addEventListener(event, func);
 }
-var ntl = new NewTabLazy();
-window.addEventListener('load', ntl.loadImages);
+document.addEventListener('DOMContentLoaded', () => {
+    var ntl = new NewTabLazy();
+    ntl.loadImages();
+    document.getElementById("dlmedia").onclick = () => ntl.downloadMedia();
+});

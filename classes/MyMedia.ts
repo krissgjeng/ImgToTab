@@ -4,7 +4,7 @@ abstract class MyMedia {
 
     public 
     public get fileName() : string {
-        return this.url.substring(this.url.lastIndexOf("/"));
+        return this.url.substring(this.url.lastIndexOf("/")).replace("/","");
     }
     
 }
