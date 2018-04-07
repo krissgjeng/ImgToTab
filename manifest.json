@@ -7,7 +7,8 @@
   "permissions": [
     "tabs",
     "<all_urls>",
-    "storage"
+    "storage",
+    "downloads"
   ],
   "browser_action": {
     "default_icon": "img/icon.png"

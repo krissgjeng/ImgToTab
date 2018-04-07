@@ -3,7 +3,7 @@ class Eventscript {
 
     constructor() { }
 
-    private endswithFilter(link) {
+    private endswithFilter(link:string) {
         for (var i = 0; i < this.filter.length; i++) {
             if (link.toLowerCase().endsWith(this.filter[i]))
                 return true;
@@ -24,7 +24,7 @@ class Eventscript {
     private createTab(linkedImages) {
         //localStorage.setItem("images", JSON.stringify(images));
         //localStorage["images"] = images;
-        chrome.storage.local.set({ images: linkedImages }, function () {
+        chrome.storage.local.set({ images: linkedImages }, () => {
             this.checkTabType();
         });
     }
@@ -55,19 +55,18 @@ class Eventscript {
                 //getSource:// code: "document.getElementsByTagName('html')[0].innerHTML;"
                 code: "var links = []; var ls = document.links; for (var i = 0; i < ls.length; i++) { links.push(ls[i].href) } links;"
             },
-            function (ps1) {
-                var images = [];
+            (ps1) => {
+                var images = new Array<string>();
                 var links = ps1[0];
                 for (var i = 0; i < links.length; i++) {
-                    var link = links[i];
-
+                    var link:string = links[i];
                     //8chan fix
                     if (link.startsWith("https://media.8ch.net")) {
                         link = link.slice(0, link.lastIndexOf("/"));
                     }
-
                     if (this.endswithFilter(link)) {
                         if (images.indexOf(link) === -1) {
+                            //alert(link);
                             images.push(link);
                         }
                     }
@@ -83,5 +82,6 @@ class Eventscript {
 }
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    new Eventscript().GetImages(tab);
+    var ev = new Eventscript();
+    ev.GetImages(tab);
 });

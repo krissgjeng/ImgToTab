@@ -2,11 +2,12 @@
     public url:string;
     public html:string;
     
-    constructor(url:string) {
+    constructor(url:string, lazy:boolean=false) {
         super();
     this.url = url;
-    this.html = '<img src="img/dummy.png"\
+    this.html = lazy ? '<img src="img/dummy.png"\
         class="lazy"\
-        data-src="'+ url + '"/>';
+        data-src="'+ url + '"/>' :
+        '<img src="'+url+'"/>';
     }
 }

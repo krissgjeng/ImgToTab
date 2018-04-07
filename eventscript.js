@@ -1,37 +1,37 @@
-var Eventscript = /** @class */ (function () {
-    function Eventscript() {
+class Eventscript {
+    constructor() {
         this.filter = [".jpg", ".png", ".gif", ".webm"];
     }
-    Eventscript.prototype.endswithFilter = function (link) {
+    endswithFilter(link) {
         for (var i = 0; i < this.filter.length; i++) {
             if (link.toLowerCase().endsWith(this.filter[i]))
                 return true;
         }
         return false;
-    };
-    Eventscript.prototype.checkTabType = function () {
+    }
+    checkTabType() {
         chrome.storage.local.get('tabtypeurl', function (item) {
             var url = "newtab.html";
             if (item.tabtypeurl != null)
                 url = item.tabtypeurl;
             chrome.tabs.create({ url: url });
         });
-    };
-    Eventscript.prototype.createTab = function (linkedImages) {
+    }
+    createTab(linkedImages) {
         //localStorage.setItem("images", JSON.stringify(images));
         //localStorage["images"] = images;
-        chrome.storage.local.set({ images: linkedImages }, function () {
+        chrome.storage.local.set({ images: linkedImages }, () => {
             this.checkTabType();
         });
-    };
-    Eventscript.prototype.containsImage = function (image, images, index) {
+    }
+    containsImage(image, images, index) {
         for (var i = 0; i < images.length; i++) {
             if (index != i && images[i].includes(image))
                 return true;
         }
         return false;
-    };
-    Eventscript.prototype.removePossibleDupes = function (images) {
+    }
+    removePossibleDupes(images) {
         var uniqueimages = [];
         for (var i = 0; i < images.length; i++) {
             var im = images[i];
@@ -41,13 +41,13 @@ var Eventscript = /** @class */ (function () {
             }
         }
         return uniqueimages;
-    };
-    Eventscript.prototype.GetImages = function (tab) {
+    }
+    GetImages(tab) {
         chrome.tabs.executeScript({
             //getSource:// code: "document.getElementsByTagName('html')[0].innerHTML;"
             code: "var links = []; var ls = document.links; for (var i = 0; i < ls.length; i++) { links.push(ls[i].href) } links;"
-        }, function (ps1) {
-            var images = [];
+        }, (ps1) => {
+            var images = new Array();
             var links = ps1[0];
             for (var i = 0; i < links.length; i++) {
                 var link = links[i];
@@ -57,6 +57,7 @@ var Eventscript = /** @class */ (function () {
                 }
                 if (this.endswithFilter(link)) {
                     if (images.indexOf(link) === -1) {
+                        //alert(link);
                         images.push(link);
                     }
                 }
@@ -66,9 +67,9 @@ var Eventscript = /** @class */ (function () {
             window.alert(uniqimages.length);
             this.createTab(uniqimages);
         });
-    };
-    return Eventscript;
-}());
+    }
+}
 chrome.browserAction.onClicked.addListener(function (tab) {
-    new Eventscript().GetImages(tab);
+    var ev = new Eventscript();
+    ev.GetImages(tab);
 });

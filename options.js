@@ -1,7 +1,6 @@
-var Options = /** @class */ (function () {
-    function Options() {
-    }
-    Options.prototype.save_options = function () {
+class Options {
+    constructor() { }
+    save_options() {
         var tabtypeurl = document.getElementById('tabtype').value;
         //var likesColor = document.getElementById('like').checked;
         chrome.storage.local.set({
@@ -14,10 +13,10 @@ var Options = /** @class */ (function () {
                 status.textContent = '';
             }, 750);
         });
-    };
+    }
     // Restores select box and checkbox state using the preferences
     // stored in chrome.storage.
-    Options.prototype.restore_options = function () {
+    restore_options() {
         // Use default value color = 'red' and likesColor = true.
         chrome.storage.sync.get({
             favoriteColor: 'red',
@@ -26,9 +25,8 @@ var Options = /** @class */ (function () {
             document.getElementById('color').value = items.favoriteColor;
             document.getElementById('like').checked = items.likesColor;
         });
-    };
-    return Options;
-}());
+    }
+}
 var opts = new Options();
 document.addEventListener('DOMContentLoaded', opts.restore_options);
 document.getElementById('save').addEventListener('click', opts.save_options);

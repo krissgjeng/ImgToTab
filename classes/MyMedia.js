@@ -1,5 +1,5 @@
-var MyMedia = /** @class */ (function () {
-    function MyMedia() {
+class MyMedia {
+    get fileName() {
+        return this.url.substring(this.url.lastIndexOf("/"));
     }
-    return MyMedia;
-}());
+}

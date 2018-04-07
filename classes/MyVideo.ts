@@ -1,15 +1,13 @@
 ﻿class MyVideo extends MyMedia {
     public url:string;
     public html:string;
-    constructor(url:string) {
+    constructor(url:string, lazy:boolean=false) {
         super();
             this.url = url;
-            this.html = '<video controls src="img/dummy.png"\
+            this.html = lazy ? '<video controls src="img/dummy.png"\
                 class="lazy"\
-                data-src="'+ url + '"></video>';
-            //this.html = '<video controls><source src="img/dummy.png"\
-            //    class="lazy"\
-            //    data-src="'+ url + '"></video>';
+                data-src="'+ url + '"></video>' : 
+                '<video controls src="'+url+'"></video>';
     }
     
 }

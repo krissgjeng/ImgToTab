@@ -1,6 +1,17 @@
-
+//class Idownload {
+//    Id: number;
+//    Name: string;
+//    Status:string="created";
+//    constructor(id:number, name:string) {
+//        this.Id=id;
+//        this.Name=name;
+//    }
+//}
 class NewTab {
     //public images;
+    
+    public static media = new Array<MyMedia>();
+    public static downloads = new Array<number>();
     constructor() {
     }
 
@@ -10,19 +21,61 @@ class NewTab {
         //alert(images);
         for (var i = 0; i < (images.length); i++) { //for (var i = 0; i < (images.length > 7 ? 7 : images.length); i++) {
             if (images[i].toLowerCase().endsWith(".webm"))
-                htmlCode += "<video controls><source src=" + images[i] + "></video><br>";
+            {
+                var vid =new MyVideo(images[i]);
+                NewTab.media.push(vid);
+                htmlCode += vid.html + "<br>";
+            }
             else
-                htmlCode += "<img src=" + images[i] + "><br>";
+            {
+                var img =new MyImage(images[i]);
+                NewTab.media.push(img);
+                htmlCode += img.html + "<br>";
+            }
         }
+        alert(NewTab.media.length);
         document.getElementById("images").innerHTML = htmlCode;
     }
 
     public loadImages() {
         chrome.storage.local.get({ images: [] },
-            function (items) {
+            (items)=> {
                 this.genlinks(items.images);
             });
     }
-}
+    
+    public downloadM(media:MyMedia) {
+        chrome.downloads.download({url: media.url, filename: "imgintab/"+media.fileName},(dlid)=>{
+            NewTab.downloads.push(dlid);
+        });
+    }
 
-document.addEventListener('DOMContentLoaded', new NewTab().loadImages);
+    public downloadMedia()
+    {
+        alert("clicked downloadall for: "+NewTab.media);
+        //for (let i = 0; i < NewTab.media.length; i++) {
+        //    const element = NewTab.media[i]; 
+        //}
+        var dlnr = 1;
+        chrome.downloads.onChanged.addListener(download=>{
+            
+            if(NewTab.downloads.indexOf(download.id)>-1)
+            {
+                alert("changed"+download.state);
+                if(download.state=="complete"&&dlnr < NewTab.media.length)
+                {
+                    this.downloadM(NewTab.media[dlnr])
+                    dlnr++;
+                }
+            }
+        });
+        this.downloadM(NewTab.media[0]);
+        
+        
+    }
+}
+document.addEventListener('DOMContentLoaded', function() { 
+    var nt = new NewTab();
+    nt.loadImages();
+    document.getElementById("dlmedia").onclick = () => nt.downloadMedia();
+});

@@ -1,7 +1,7 @@
 class NewTabLazy {
 
     public lazy: HTMLCollectionOf<HTMLElement>;
-    public media:Array<MyMedia>;
+    public media:Array<MyMedia> = new Array<MyMedia>();
 
     constructor() {
         setTimeout(function () {
@@ -17,13 +17,13 @@ class NewTabLazy {
         for (var i = 0; i < (images.length); i++) { //for (var i = 0; i < (images.length > 7 ? 7 : images.length); i++) {
             if (images[i].toLowerCase().endsWith(".webm"))
             {
-                var vid =new MyVideo(images[i]);
+                var vid =new MyVideo(images[i],true);
                 this.media.push(vid);
                 htmlCode += vid.html + "<br>";
             }
             else
             {
-                var img =new MyImage(images[i]);
+                var img =new MyImage(images[i],true);
                 this.media.push(img);
                 htmlCode += img.html + "<br>";
             }
