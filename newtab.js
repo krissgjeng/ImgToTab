@@ -47,8 +47,8 @@ class NewTab {
         var dlnr = 1;
         chrome.downloads.onChanged.addListener(download => {
             if (NewTab.downloads.indexOf(download.id) > -1) {
-                alert("changed" + download.state);
-                if (download.state == "complete" && dlnr < NewTab.media.length) {
+                //alert("changed"+download.state.current);
+                if (download.state.current == "complete" && dlnr < NewTab.media.length) {
                     this.downloadM(NewTab.media[dlnr]);
                     dlnr++;
                 }
@@ -60,7 +60,7 @@ class NewTab {
 //public images;
 NewTab.media = new Array();
 NewTab.downloads = new Array();
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     var nt = new NewTab();
     nt.loadImages();
     document.getElementById("dlmedia").onclick = () => nt.downloadMedia();

@@ -61,8 +61,8 @@ class NewTab {
             
             if(NewTab.downloads.indexOf(download.id)>-1)
             {
-                alert("changed"+download.state);
-                if(download.state=="complete"&&dlnr < NewTab.media.length)
+                //alert("changed"+download.state.current);
+                if(download.state.current=="complete"&&dlnr < NewTab.media.length)
                 {
                     this.downloadM(NewTab.media[dlnr])
                     dlnr++;
@@ -74,7 +74,7 @@ class NewTab {
         
     }
 }
-document.addEventListener('DOMContentLoaded', function() { 
+document.addEventListener('DOMContentLoaded', ()=> { 
     var nt = new NewTab();
     nt.loadImages();
     document.getElementById("dlmedia").onclick = () => nt.downloadMedia();
