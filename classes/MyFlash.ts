@@ -8,6 +8,6 @@
     this.html = lazy ? '<embed src="img/dummy.png"\
         class="lazy"\
         data-src="'+ url + '"/>' :
-        '<object><embed src="'+url+'"/></object>';
+        '<embed type="application/x-shockwave-flash" src="'+url+'"/>';
     }
 }

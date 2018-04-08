@@ -10,6 +10,7 @@
     "storage",
     "downloads"
   ],
+  "content_security_policy": "script-src 'self'; object-src 'self' https://*.8ch.net https://*.4chan.org;",
   "browser_action": {
     "default_icon": "img/icon.png"
   },

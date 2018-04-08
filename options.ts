@@ -9,7 +9,7 @@ class Options {
     chrome.storage.local.set({
       tabtypeurl: tabtypeurl
     },
-      function () {
+     ()=> {
         // Update status to let user know options were saved.
         var status = document.getElementById('status');
         status.textContent = 'Options saved.';
@@ -19,16 +19,24 @@ class Options {
       });
   }
 
+  private getSelectIndex(val:string, element: HTMLSelectElement ):number
+  {
+    for (let i = 0; i < element.options.length; i++) {
+      const el = element.options[i];
+      if(el.value==val) return i;
+    }
+    return 0; //return -1 if i cared for error checking
+  }
   // Restores select box and checkbox state using the preferences
   // stored in chrome.storage.
   public restore_options() {
     // Use default value color = 'red' and likesColor = true.
-    chrome.storage.sync.get({
-      favoriteColor: 'red',
-      likesColor: true
-    }, function (items) {
-      (<HTMLInputElement>document.getElementById('color')).value = items.favoriteColor;
-      (<HTMLInputElement>document.getElementById('like')).checked = items.likesColor;
+    chrome.storage.local.get({
+      tabtypeurl: 'newtabSorted.html'
+    }, (items)=> {
+      var elstatus = <HTMLSelectElement>document.getElementById('tabtype');
+      var index= this.getSelectIndex(items.tabtypeurl,elstatus);
+      elstatus.selectedIndex = index;
     });
   }
 
