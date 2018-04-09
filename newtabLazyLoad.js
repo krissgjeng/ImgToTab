@@ -2,7 +2,6 @@ class NewTabLazy {
     constructor() {
         setTimeout(() => {
             registerListener('scroll', this.lazyLoad);
-            alert("time");
         }, 500);
     }
     genlinks(images) {
