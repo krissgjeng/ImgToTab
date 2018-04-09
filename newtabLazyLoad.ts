@@ -7,7 +7,6 @@ class NewTabLazy {
     constructor() {
         setTimeout( ()=> {
             registerListener('scroll', this.lazyLoad);
-            alert("time");
         }, 500);
     }
     private genlinks(images) {
@@ -80,13 +79,16 @@ class NewTabLazy {
         );
     }
     public downloadM(media:MyMedia,index:number=null) {
-        chrome.downloads.download({url: media.url, filename: "imgintab/"+( index!=null ? index.toString()+"_"+media.fileName :media.fileName )},(dlid)=>{
+        var dlf = (<HTMLInputElement>document.getElementById("dlfolder")).value;
+        var dlfolder = dlf ?  "imgintab/"+dlf+"/" : "imgintab/";
+        chrome.downloads.download({url: media.url, filename: dlfolder+( index!=null ? index.toString()+"_"+media.fileName :media.fileName )},(dlid)=>{
             NewTabLazy.downloads.push(dlid);
         });
     }
 
     public downloadMedia()
     {
+
         alert("clicked downloadall for: "+NewTabLazy.media);
         //for (let i = 0; i < NewTab.media.length; i++) {
         //    const element = NewTab.media[i]; 
@@ -97,10 +99,18 @@ class NewTabLazy {
             if(NewTabLazy.downloads.indexOf(download.id)>-1)
             {
                 //alert("changed"+download.state.current);
-                if(download.state.current=="complete"&&dlnr < NewTabLazy.media.length)
+                if(download.state.current=="complete")
                 {
-                    this.downloadM(NewTabLazy.media[dlnr],dlnr);
-                    dlnr++;
+                    if(dlnr < NewTabLazy.media.length)
+                    {
+                        chrome.downloads.erase({id: download.id}, null);
+                        this.downloadM(NewTabLazy.media[dlnr],dlnr);
+                        dlnr++;
+                    }
+                    else if(dlnr==NewTabLazy.media.length)
+                    {
+                        chrome.downloads.erase({id: download.id}, null);
+                    }
                 }
             }
         });

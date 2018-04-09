@@ -62,7 +62,9 @@ class NewTabLazy {
             rect.left <= (window.innerWidth || document.documentElement.clientWidth));
     }
     downloadM(media, index = null) {
-        chrome.downloads.download({ url: media.url, filename: "imgintab/" + (index != null ? index.toString() + "_" + media.fileName : media.fileName) }, (dlid) => {
+        var dlf = document.getElementById("dlfolder").value;
+        var dlfolder = dlf ? "imgintab/" + dlf + "/" : "imgintab/";
+        chrome.downloads.download({ url: media.url, filename: dlfolder + (index != null ? index.toString() + "_" + media.fileName : media.fileName) }, (dlid) => {
             NewTabLazy.downloads.push(dlid);
         });
     }
@@ -75,9 +77,15 @@ class NewTabLazy {
         chrome.downloads.onChanged.addListener(download => {
             if (NewTabLazy.downloads.indexOf(download.id) > -1) {
                 //alert("changed"+download.state.current);
-                if (download.state.current == "complete" && dlnr < NewTabLazy.media.length) {
-                    this.downloadM(NewTabLazy.media[dlnr], dlnr);
-                    dlnr++;
+                if (download.state.current == "complete") {
+                    if (dlnr < NewTabLazy.media.length) {
+                        chrome.downloads.erase({ id: download.id }, null);
+                        this.downloadM(NewTabLazy.media[dlnr], dlnr);
+                        dlnr++;
+                    }
+                    else if (dlnr == NewTabLazy.media.length) {
+                        chrome.downloads.erase({ id: download.id }, null);
+                    }
                 }
             }
         });
