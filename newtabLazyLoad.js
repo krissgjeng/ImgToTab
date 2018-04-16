@@ -1,7 +1,7 @@
 class NewTabLazy {
     constructor() {
         setTimeout(() => {
-            registerListener('scroll', this.lazyLoad);
+            document.addEventListener('scroll', () => this.lazyLoad());
         }, 500);
     }
     genlinks(images) {
@@ -17,7 +17,7 @@ class NewTabLazy {
             }
             else if (images[i].toLowerCase().endsWith(".swf")) {
                 var flash = new MyFlash(images[i]);
-                NewTab.media.push(flash);
+                NewTabLazy.media.push(flash);
                 htmlCode += flash.html + "<br>";
             }
             else {
