@@ -98,8 +98,8 @@ class NewTabLazy {
             
             if(NewTabLazy.downloads.indexOf(download.id)>-1)
             {
-                //alert("changed"+download.state.current);
-                if(download.state.current=="complete")
+                //alert("changed"+download.state); //handle error donwloading file...
+                if(download.state!=null&&download.state.current=="complete")
                 {
                     if(dlnr < NewTabLazy.media.length)
                     {
@@ -119,7 +119,7 @@ class NewTabLazy {
 }
 
 function registerListener(event, func) {
-        window.addEventListener(event, func)
+        window.addEventListener(event, ()=>func());
 }
 
 document.addEventListener('DOMContentLoaded', ()=> { 

@@ -75,8 +75,8 @@ class NewTabLazy {
         var dlnr = 1;
         chrome.downloads.onChanged.addListener(download => {
             if (NewTabLazy.downloads.indexOf(download.id) > -1) {
-                //alert("changed"+download.state.current);
-                if (download.state.current == "complete") {
+                //alert("changed"+download.state); //handle error donwloading file...
+                if (download.state != null && download.state.current == "complete") {
                     if (dlnr < NewTabLazy.media.length) {
                         chrome.downloads.erase({ id: download.id }, null);
                         this.downloadM(NewTabLazy.media[dlnr], dlnr);
@@ -94,7 +94,7 @@ class NewTabLazy {
 NewTabLazy.media = new Array();
 NewTabLazy.downloads = new Array();
 function registerListener(event, func) {
-    window.addEventListener(event, func);
+    window.addEventListener(event, () => func());
 }
 document.addEventListener('DOMContentLoaded', () => {
     var ntl = new NewTabLazy();
